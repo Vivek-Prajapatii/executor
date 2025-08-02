@@ -1,7 +1,7 @@
 .resizer {
   background: #555;
   transition: background 0.3s;
-
+  
   &:hover {
     background: #777;
   }
@@ -9,12 +9,12 @@
 
 .horizontal {
   width: 5px;
-  height: 100%;
+  height : auto;
   cursor: col-resize;
 }
 
 .vertical {
   height: 5px;
-  width: 100%;
+  width: auto;
   cursor: row-resize;
 }

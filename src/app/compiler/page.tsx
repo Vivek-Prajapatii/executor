@@ -8,7 +8,7 @@ import { Resizer } from "@/components/Resizer";
 import styles from "@/styles/app/compiler/Compiler.module.scss";
 
 export default function CompilerPage() {
-  const [code, setCode] = useState("console.log('Hello world');");
+  const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
 
   const {
@@ -21,22 +21,10 @@ export default function CompilerPage() {
     startVerticalDrag,
   } = useResizablePanes();
 
-  function handleRun() {
-    try {
-      // NEVER use eval in production. Replace with proper safe execution in prod.
-      // eslint-disable-next-line no-eval
-      const result = eval(code);
-      setOutput(result === undefined ? "No output" : String(result));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setOutput(err.toString());
-    }
-  }
-
   return (
     <section className={styles.editorWrapper}>
       <div ref={editorRef} style={{ flex: `${editorWidth} 1 0%` }}>
-        <Editor code={code} setCode={setCode} />
+        <Editor code={code || ''} setCode={setCode} />
       </div>
 
       <Resizer orientation="horizontal" onMouseDown={startHorizontalDrag} />
@@ -47,7 +35,7 @@ export default function CompilerPage() {
         style={{ flex: `${100 - editorWidth} 1 0%` }}
       >
         <div ref={inputRef} style={{ flex: `${inputHeight} 1 0%` }}>
-          <Input code={code} />
+          <Input code={code || ''} />
         </div>
 
         <Resizer orientation="vertical" onMouseDown={startVerticalDrag} />
