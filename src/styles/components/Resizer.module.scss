@@ -1,0 +1,20 @@
+.resizer {
+  background: #555;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #777;
+  }
+}
+
+.horizontal {
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+}
+
+.vertical {
+  height: 5px;
+  width: 100%;
+  cursor: row-resize;
+}
