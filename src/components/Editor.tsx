@@ -1,14 +1,11 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useCallback } from "react";
 import styles from "@/styles/components/Editor.module.scss";
+import { useCurrentContext } from "@/lib/common/ContextProvider";
 
-interface EditorProps {
-  code: string;
-  setCode: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export const Editor: React.FC<EditorProps> = ({ code, setCode }) => {
+export const Editor = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { code, setCode } = useCurrentContext();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Tab") {
@@ -30,12 +27,33 @@ export const Editor: React.FC<EditorProps> = ({ code, setCode }) => {
     }
   };
 
+  const timerRef = useRef<NodeJS.Timeout>(null);
+
+  const debouncedSetCode = useCallback((value: string) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    
+    timerRef.current = setTimeout(() => {
+      setCode(value);
+    }, 3000); // 3 second debounce
+  }, [setCode]);
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    // Update the textarea value immediately for better UX
+    if (textareaRef.current) {
+      textareaRef.current.value = value;
+    }
+    debouncedSetCode(value);
+  };
+
   return (
     <div className={styles.editor}>
       <textarea
         ref={textareaRef}
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
+        defaultValue={code} // Use defaultValue instead of value to make it uncontrolled
+        onChange={handleOnChange}
         onKeyDown={handleKeyDown}
         spellCheck={false}
       />

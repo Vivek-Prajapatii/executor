@@ -1,11 +1,11 @@
 .editorWrapper {
   display: flex;
   flex-direction: row;
-  min-height: 100vh;
+  height: 620px;
   width: 100%;
 
   .inputOutput {
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     flex: 1;

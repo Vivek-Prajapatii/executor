@@ -8,9 +8,6 @@ import { Resizer } from "@/components/Resizer";
 import styles from "@/styles/app/compiler/Compiler.module.scss";
 
 export default function CompilerPage() {
-  const [code, setCode] = useState("");
-  const [output, setOutput] = useState("");
-
   const {
     editorWidth,
     inputHeight,
@@ -24,7 +21,7 @@ export default function CompilerPage() {
   return (
     <section className={styles.editorWrapper}>
       <div ref={editorRef} style={{ flex: `${editorWidth} 1 0%` }}>
-        <Editor code={code || ''} setCode={setCode} />
+        <Editor />
       </div>
 
       <Resizer orientation="horizontal" onMouseDown={startHorizontalDrag} />
@@ -35,13 +32,13 @@ export default function CompilerPage() {
         style={{ flex: `${100 - editorWidth} 1 0%` }}
       >
         <div ref={inputRef} style={{ flex: `${inputHeight} 1 0%` }}>
-          <Input code={code || ''} />
+          <Input />
         </div>
 
         <Resizer orientation="vertical" onMouseDown={startVerticalDrag} />
 
         <div style={{ flex: `${100 - inputHeight} 1 0%` }}>
-          <Output output={output} />
+          <Output/>
         </div>
       </div>
     </section>
