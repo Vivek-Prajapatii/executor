@@ -1,18 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import styles from "@/styles/components/Output.module.scss";
-import { CurrentContext } from "@/lib/common/ContextProvider";
+import { useCurrentContext } from "@/lib/common/ContextProvider";
 
 export const Output = () => {
-  const context = useContext(CurrentContext);
-  
-  if (!context) {
-    throw new Error("context must be used within a ContextProvider");
-  }
-  const { output } = context;
+  const { output } = useCurrentContext();
+
   return (
     <div className={styles.output}>
       <h3>Output : </h3>
-      <pre>{output}</pre>
+      <pre>{`${output}`}</pre>
     </div>
   );
 };

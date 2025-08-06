@@ -1,11 +1,12 @@
 import React from "react";
 import styles from "@/styles/components/Input.module.scss";
+import { useCurrentContext } from "@/lib/common/ContextProvider";
 
 export const Input = () => {
-  
+  const { stdInput, setStdInput } = useCurrentContext();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Store or use the value as needed
+    setStdInput(value);
   };
 
   return (
@@ -16,6 +17,7 @@ export const Input = () => {
           className={styles.inputBox}
           id="inputBox"
           type="text"
+          value={stdInput}
           placeholder="Input for the program (optional)"
           onChange={handleInputChange}
         />
