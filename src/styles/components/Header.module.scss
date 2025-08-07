@@ -1,7 +1,7 @@
 .header {
-  background-color: #2b2c2e; // bg-gray-900
+  background-color: #4d5564; // bg-gray-900
   color: white;
-  padding: 1rem;
+  padding: 0.7rem;
 
   .container {
     max-width: 80rem; // max-w-7xl
@@ -11,15 +11,27 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    .iconContainer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
   }
 
   .title {
+    display: flex;
     font-size: 1.25rem; // text-xl
     font-weight: 700; // font-bold
+    align-items: flex-end;
+
+    & svg {
+      margin-bottom: 0.5px; // mb-1
+    }
   }
 
   .runButton {
-    background-color: #2563eb; // bg-blue-600
+    background-color: #2b8d22; // bg-blue-600
     color: white;
     font-weight: 700; // font-bold
     padding: 0.5rem 1rem; // py-2 px-4
@@ -31,7 +43,7 @@
     transition: background-color 0.2s; // transition-colors
 
     &:hover {
-      background-color: #1d4ed8; // hover:bg-blue-700
+      background-color: #289b1d; // hover:bg-blue-700
     }
   }
 

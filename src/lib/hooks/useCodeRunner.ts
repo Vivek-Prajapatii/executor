@@ -73,6 +73,7 @@ export const useCodeRunner = () => {
   };
 
   // Mock process object
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const mockProcess: unknown = {
     env: {
       NODE_ENV: "development",
@@ -151,29 +152,36 @@ export const useCodeRunner = () => {
         "console",
         `
         // Make globals available
-        const global = this;
-        global.require = require;
-        global.process = process;
-        global.console = console;
-        global.module = { exports: {} };
-        global.exports = global.module.exports;
+        const window = this;
+        window.require = require;
+        window.process = process;
+        window.console = console;
+        window.module = { exports: {} };
+        window.exports = window.module.exports;
         
-        // Wrap in async function to handle top-level await
-        (async () => {
-          try {
-            ${currentCode}
-            return { success: true, returnValue: undefined };
-          } catch (err) {
-            return { 
-              success: false, 
-              error: err instanceof Error ? err : String(err) 
-            };
+        // Wrap in try-catch to handle runtime errors
+        try {
+          // Use with statement to catch undefined variables
+          with (window) {
+            // Use eval to execute in the same scope
+            const result = (function() {
+              ${currentCode}
+            })();
+            
+            // If the code doesn't return anything but has console output,
+            // we'll see that in the logs
+            return { success: true, returnValue: result };
           }
-        })()
+        } catch (err) {
+          return { 
+            success: false, 
+            error: err instanceof Error ? err : String(err) 
+          };
+        }
       `
       );
 
-      const result = await func(mockRequire, process, readline, console);
+      const result = await func(mockRequire, mockProcess, readline, console);
 
       // Restore original console.log
       console.log = originalConsoleLog;
@@ -185,11 +193,17 @@ export const useCodeRunner = () => {
       }
 
       if (result?.success) {
+        // Only append return value if it's not undefined
         if (result.returnValue !== undefined) {
           output += JSON.stringify(result.returnValue, null, 2);
         }
       } else if (result) {
-        output += result.error;
+        // Handle errors with full error details
+        if (result.error instanceof Error) {
+          output += `${result.error.name}: ${result.error.message}`;
+        } else {
+          output += String(result.error);
+        }
       }
 
       setOutput(output);
@@ -201,7 +215,9 @@ export const useCodeRunner = () => {
       console.error(errorMessage);
       return { success: false, error: errorMessage };
     }
-  }, [code, editorRef, getNextInput, resetInput, setOutput]);
+  }, [code, editorRef, getNextInput, mockProcess, resetInput, setOutput]);
 
-  return { runCode };
+  return {
+    runCode,
+  };
 };
