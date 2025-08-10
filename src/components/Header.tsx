@@ -21,7 +21,7 @@ const Header = () => {
           <div
             onClick={runCode}
             className={styles.runButton}
-            title="Run Code (Ctrl+Enter)"
+            title="Run Code"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
