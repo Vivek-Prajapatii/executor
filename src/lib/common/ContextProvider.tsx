@@ -15,9 +15,10 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [code, setCode] = useState<string>("");
   const [output, setOutput] = useState<string | Error>("");
   const [stdInput, setStdInput] = useState<string>("");
-  const inputLines = React.useRef<string[]>([]);
-  const currentInputIndex = React.useRef<number>(0);
+  const inputLines = useRef<string[]>([]);
+  const currentInputIndex = useRef<number>(0);
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
+  const [isClearPadClicked, setIsClearPadClicked] = useState<boolean>(false);
 
   // Update input lines when stdInput changes
   React.useEffect(() => {
@@ -39,8 +40,6 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     currentInputIndex.current = 0;
   }, []);
 
-  console.log(output, code);
-
   return (
     <CurrentContext.Provider
       value={{
@@ -53,6 +52,8 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setStdInput,
         getNextInput,
         resetInput,
+        isClearPadClicked,
+        setIsClearPadClicked,
       }}
     >
       {children}

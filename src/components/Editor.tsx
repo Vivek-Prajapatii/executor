@@ -1,46 +1,58 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import styles from "@/styles/components/Editor.module.scss";
 import { useCurrentContext } from "@/lib/common/ContextProvider";
 
 export const Editor = () => {
-  const { editorRef } = useCurrentContext();
-  const { code, setCode } = useCurrentContext();
+  const { editorRef, code, setCode } = useCurrentContext();
   const [lineCount, setLineCount] = useState(1);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Update line count when code changes
   useEffect(() => {
-    const lines = code.split("\n");
-    setLineCount(lines.length || 1);
+    setLineCount((code.match(/\n/g)?.length ?? 0) + 1);
   }, [code]);
 
-  // Sync scroll between line numbers and textarea
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (lineNumbersRef.current && textareaRef.current) {
       lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
     }
-  };
+  }, []);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Tab") {
-      e.preventDefault();
-      const target = e.currentTarget;
-      const { selectionStart, selectionEnd } = target;
-      const newCode =
-        code.substring(0, selectionStart) + "  " + code.substring(selectionEnd);
-      setCode(newCode);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const target = e.currentTarget;
+        const { selectionStart, selectionEnd } = target;
+        const newCode =
+          code.substring(0, selectionStart) +
+          "  " +
+          code.substring(selectionEnd);
+        setCode(newCode);
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.selectionStart =
+              textareaRef.current.selectionEnd = selectionStart + 2;
+          }
+        }, 0);
+      }
+    },
+    [code, setCode]
+  );
 
-      // Set caret position after state update
-      setTimeout(() => {
-        if (editorRef.current) {
-          editorRef.current.selectionStart = editorRef.current.selectionEnd =
-            selectionStart + 2;
-        }
-      }, 0);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setCode(e.target.value);
+    },
+    [setCode]
+  );
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      editorRef.current = textareaRef.current;
     }
-  };
+  }, [editorRef]);
 
   return (
     <div className={styles.editorContainer}>
@@ -52,15 +64,10 @@ export const Editor = () => {
         ))}
       </div>
       <textarea
-        ref={(el) => {
-          if (el) {
-            editorRef.current = el;
-            textareaRef.current = el;
-          }
-        }}
+        ref={textareaRef}
         className={styles.textarea}
         value={code}
-        onChange={(e) => setCode(e.target.value)}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
         onScroll={handleScroll}
         spellCheck={false}

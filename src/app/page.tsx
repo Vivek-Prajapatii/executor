@@ -3,19 +3,16 @@ import React from "react";
 import { useResizablePanes } from "@/lib/hooks/useResizablePanes";
 import { Editor } from "@/components/Editor";
 import { Input } from "@/components/Input";
-import { Output } from "@/components/Output";
 import { Resizer } from "@/components/Resizer";
 import styles from "@/styles/app/page.module.scss";
+import ToggleOutput from "@/components/ToggleOutput";
 
 export default function CompilerPage() {
   const {
     editorWidth,
-    inputHeight,
     editorRef,
     inputOutputRef,
-    inputRef,
     startHorizontalDrag,
-    startVerticalDrag,
   } = useResizablePanes();
 
   return (
@@ -31,15 +28,7 @@ export default function CompilerPage() {
         className={styles.inputOutput}
         style={{ flex: `${100 - editorWidth} 1 0%` }}
       >
-        <div ref={inputRef} style={{ flex: `${inputHeight} 1 0%` }}>
-          <Input />
-        </div>
-
-        <Resizer orientation="vertical" onMouseDown={startVerticalDrag} />
-
-        <div style={{ flex: `${100 - inputHeight} 1 0%` }}>
-          <Output/>
-        </div>
+        <ToggleOutput />
       </div>
     </section>
   );

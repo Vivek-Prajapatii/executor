@@ -7,7 +7,7 @@ export const Output = () => {
 
   return (
     <div className={styles.output}>
-      <h3>Output : </h3>
+      {/* <h3>Output : </h3> */}
       <pre>{`${output}`}</pre>
     </div>
   );
