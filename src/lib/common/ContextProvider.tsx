@@ -13,7 +13,7 @@ const CurrentContext = createContext<CurrentContextType | undefined>(undefined);
 
 const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [code, setCode] = useState<string>("");
-  const [output, setOutput] = useState<string | Error>("");
+  const [output, setOutput] = useState<string | Error>("Your Output will be printed here...\n\nUse Scratch Pad for rough work");
   const [stdInput, setStdInput] = useState<string>("");
   const inputLines = useRef<string[]>([]);
   const currentInputIndex = useRef<number>(0);
