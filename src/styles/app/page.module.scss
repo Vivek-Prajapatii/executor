@@ -1,0 +1,14 @@
+.editorWrapper {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 3.7rem);
+  width: 100%;
+
+  .inputOutput {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 200px;
+  }
+}

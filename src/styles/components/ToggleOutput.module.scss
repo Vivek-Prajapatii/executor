@@ -1,0 +1,62 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  height: 100%;
+  width: 100%;
+}
+
+.header {
+  display:flex;
+  justify-content: space-between;
+  padding: 5px;
+  align-items: center;
+}
+
+.buttonGroup {
+  background-color: #1e1e1e;
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+  border: 1px solid #333;
+  border-bottom: none;
+}
+
+.button {
+  flex: 1;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #2a2a2a;
+    color: #fff;
+  }
+
+  &.active {
+    color: #fff;
+    border-bottom: 2px solid #4d90fe;
+    background-color: #252526;
+  }
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+  border: 1px solid #333;
+  border-radius: 0 0 4px 4px;
+  background-color: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+}
+
+// Ensure the ScratchPad and Output components fill their container
+.scratchPad,
+.output {
+  flex: 1;
+  overflow: auto;
+}
