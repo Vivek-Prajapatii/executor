@@ -1,4 +1,6 @@
 export interface CurrentContextType {
+  uuid: string;
+  setUuid: (uuid: string) => void;
   code: string;
   setCode: (code: string) => void;
   output: string | Error;
