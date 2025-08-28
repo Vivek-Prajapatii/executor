@@ -8,8 +8,8 @@ import React, {
 } from "react";
 import styles from "@/styles/components/Editor.module.scss";
 import { useCurrentContext } from "@/lib/common/ContextProvider";
-import { saveCodeSnippet } from "@/lib/common/firebase";
 import { debounce } from "@/lib/common/utils";
+import { saveSnippet } from "@/lib/common/snippetService";
 
 export const Editor = () => {
   const { editorRef, code, setCode, uuid } = useCurrentContext();
@@ -53,7 +53,7 @@ export const Editor = () => {
   const debouncedSave = useMemo(
     () =>
       debounce(async (value: string) => {
-        await saveCodeSnippet(uuid, value, "");
+        await saveSnippet(uuid, value, "");
         localStorage.setItem("code", value);
       }, 5000),
     [uuid]

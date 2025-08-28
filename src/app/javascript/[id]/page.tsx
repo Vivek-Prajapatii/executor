@@ -6,7 +6,7 @@ import { Resizer } from "@/components/Resizer";
 import styles from "@/styles/app/page.module.scss";
 import ToggleOutput from "@/components/ToggleOutput";
 import { useCurrentContext } from "@/lib/common/ContextProvider";
-import { getRealTimeSnippets } from "@/lib/common/firebase";
+import { subscribeToSnippet } from "@/lib/common/snippetService";
 
 type ParamsType = {
   id: string;
@@ -27,7 +27,7 @@ export default function CompilerPage({
   useEffect(() => {
     if (!id) return;
     setUuid(id);
-    const unsubscribe = getRealTimeSnippets(id, (data) => {
+    const unsubscribe = subscribeToSnippet(id, (data) => {
       if (data?.code) {
         setCode(data.code);
       } else {
