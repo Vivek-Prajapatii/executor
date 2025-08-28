@@ -22,10 +22,7 @@ const db = getFirestore(app);
  * @param id - The unique identifier for the code snippet
  * @returns The code snippet if successful, null otherwise
  */
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
