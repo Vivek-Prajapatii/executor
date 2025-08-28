@@ -1,0 +1,63 @@
+// SharePopup.module.scss
+
+.overlay {
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup {
+  min-width: 320px;
+  background: #4b4848;
+  padding: 2rem;
+  border-radius: 14px;
+  box-shadow: 0 0 18px rgba(0,0,0,0.10);
+  text-align: center;
+}
+
+.input {
+  width: 95%;
+  font-size: 1rem;
+  padding: 8px;
+  margin-bottom: 10px;
+//   border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #777779;
+}
+
+.buttonRow {
+  margin-top: 8px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.copyButton {
+  padding: 8px 18px;
+  background: #2ca832;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: #005bb5;
+  }
+}
+
+.closeButton {
+  padding: 8px 14px;
+  background: #eee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  &:hover {
+    background: #dadada;
+  }
+}

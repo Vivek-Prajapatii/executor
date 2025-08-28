@@ -1,10 +1,18 @@
 "use client";
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import styles from "@/styles/components/Editor.module.scss";
 import { useCurrentContext } from "@/lib/common/ContextProvider";
+import { debounce } from "@/lib/common/utils";
+import { saveSnippet } from "@/lib/common/snippetService";
 
 export const Editor = () => {
-  const { editorRef, code, setCode } = useCurrentContext();
+  const { editorRef, code, setCode, uuid } = useCurrentContext();
   const [lineCount, setLineCount] = useState(1);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -41,11 +49,23 @@ export const Editor = () => {
     [code, setCode]
   );
 
+  // Debounce the save function so it triggers after 500ms of inactivity
+  const debouncedSave = useMemo(
+    () =>
+      debounce(async (value: string) => {
+        await saveSnippet(uuid, value, "");
+        localStorage.setItem("code", value);
+      }, 5000),
+    [uuid]
+  );
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setCode(e.target.value);
+      const value = e.target.value;
+      setCode(value);
+      debouncedSave(value);
     },
-    [setCode]
+    [setCode, debouncedSave]
   );
 
   useEffect(() => {

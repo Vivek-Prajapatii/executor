@@ -19,6 +19,7 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const currentInputIndex = useRef<number>(0);
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const [isClearPadClicked, setIsClearPadClicked] = useState<boolean>(false);
+  const [uuid, setUuid] = useState<string>("");
 
   // Update input lines when stdInput changes
   React.useEffect(() => {
@@ -43,6 +44,8 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <CurrentContext.Provider
       value={{
+        uuid,
+        setUuid,
         code,
         setCode,
         output,
