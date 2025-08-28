@@ -4,18 +4,14 @@ import { useCodeRunner } from "@/lib/hooks/useCodeRunner";
 import { useFileDownload } from "@/lib/hooks/useFileDownload";
 import styles from "@/styles/components/Header.module.scss";
 import { FaJsSquare, FaFileDownload, FaShareAlt } from "react-icons/fa";
-import { saveCodeSnippet } from "@/lib/common/firebase";
-import { useCurrentContext } from "@/lib/common/ContextProvider";
 import { SharePopup } from "./SharePopup";
 
 const Header = () => {
   const { runCode } = useCodeRunner();
   const { downloadFile } = useFileDownload();
   const [showPopup, setShowPopup] = useState(false);
-  const { code, uuid } = useCurrentContext();
 
   const handleShare = async () => {
-    await saveCodeSnippet(uuid, code, "");
     setShowPopup(true);
   };
 

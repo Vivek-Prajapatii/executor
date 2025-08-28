@@ -6,7 +6,7 @@ import { Resizer } from "@/components/Resizer";
 import styles from "@/styles/app/page.module.scss";
 import ToggleOutput from "@/components/ToggleOutput";
 import { useCurrentContext } from "@/lib/common/ContextProvider";
-import { readCodeSnippet } from "@/lib/common/firebase";
+import { getRealTimeSnippets } from "@/lib/common/firebase";
 
 type ParamsType = {
   id: string;
@@ -21,25 +21,21 @@ export default function CompilerPage({
   const { editorWidth, editorRef, inputOutputRef, startHorizontalDrag } =
     useResizablePanes();
   const { setCode, setUuid } = useCurrentContext();
-  const resolvedParams = React.use(params);
+  const resolvedParams = use(params);
   const id = resolvedParams?.id;
 
   useEffect(() => {
-    const fetchCode = async () => {
-      try {
-        console.log(id);
-        setUuid(id);
-        const snippet = await readCodeSnippet(id);
-        console.log(snippet);
-        if (snippet) {
-          setCode(snippet);
-        }
-      } catch (error) {
-        console.error("Error fetching code snippet:", error);
+    if (!id) return;
+    setUuid(id);
+    const unsubscribe = getRealTimeSnippets(id, (data) => {
+      if (data?.code) {
+        setCode(data.code);
+      } else {
+        setCode("//Type your things here..."); // or handle no code case
       }
-    };
+    });
 
-    fetchCode();
+    return () => unsubscribe(); // cleanup listener on unmount or id change
   }, [id, setCode, setUuid]);
 
   return (

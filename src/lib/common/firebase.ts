@@ -1,7 +1,13 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
-import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  getDoc,
+  doc,
+  setDoc,
+  onSnapshot,
+} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,20 +25,44 @@ const db = getFirestore(app);
 export { app, db };
 
 // The code snippet data could be just "code" or have a name, description, etc.
-export async function saveCodeSnippet(uuid: string, code: string, title: string = "") {
+export async function saveCodeSnippet(
+  uuid: string,
+  code: string,
+  title: string = ""
+) {
   try {
     await setDoc(doc(db, "codeSnippets", uuid), {
       code,
       title,
       createdAt: Date.now(),
     });
-    return uuid;  // Use this to share, retrieve, etc.
+    return uuid; // Use this to share, retrieve, etc.
   } catch (error) {
     console.error("Error saving code snippet:", error);
     return null;
   }
 }
 
+export function getRealTimeSnippets(
+  uuid: string,
+  callback: (
+    data: { code: string; title: string; createdAt: number } | null
+  ) => void
+) {
+  const docRef = doc(db, "codeSnippets", uuid);
+  const unsubscribe = onSnapshot(docRef, (docSnap) => {
+    if (docSnap.exists()) {
+      callback(
+        docSnap.data() as { code: string; title: string; createdAt: number }
+      );
+    } else {
+      callback(null);
+    }
+  });
+
+  // Return unsubscribe function to allow cleanup
+  return unsubscribe;
+}
 export async function readCodeSnippet(uuid: string): Promise<string | null> {
   try {
     const docSnap = await getDoc(doc(db, "codeSnippets", uuid));
