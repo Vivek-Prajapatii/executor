@@ -67,6 +67,20 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check if the code size exceeds 100KB (100 * 1024 bytes)
+    const MAX_CODE_SIZE = 100 * 1024; // 100KB in bytes
+    const codeSize = new TextEncoder().encode(code).length;
+
+    if (codeSize > MAX_CODE_SIZE) {
+      return NextResponse.json(
+        {
+          error: "Code size exceeds the maximum allowed limit of 100KB",
+          size: `${(codeSize / 1024).toFixed(2)}KB`,
+        },
+        { status: 400 }
+      );
+    }
+
     const docRef = doc(db, "codeSnippets", id);
 
     await setDoc(
@@ -75,11 +89,15 @@ export async function POST(request: Request) {
         code,
         title: title || "Untitled",
         createdAt: Date.now(),
+        size: codeSize, // Optionally store the size for reference
       },
       { merge: true }
     );
 
-    return NextResponse.json({ id });
+    return NextResponse.json({
+      id,
+      size: `${(codeSize / 1024).toFixed(2)}KB`,
+    });
   } catch (error) {
     console.error("Error saving snippet:", error);
     return NextResponse.json(
@@ -88,5 +106,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-

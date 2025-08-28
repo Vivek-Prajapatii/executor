@@ -28,6 +28,7 @@ export async function GET(request: Request) {
   const encoder = new TextEncoder();
   const stream = new TransformStream();
   const writer = stream.writable.getWriter();
+  const MAX_CODE_SIZE = 100 * 1024; // 100KB in bytes
 
   const docRef = doc(db, "codeSnippets", id);
 
@@ -36,11 +37,35 @@ export async function GET(request: Request) {
     (doc) => {
       if (doc.exists()) {
         const data = doc.data();
+        const codeSize = data.code
+          ? new TextEncoder().encode(data.code).length
+          : 0;
+
+        if (codeSize > MAX_CODE_SIZE) {
+          writer.write(
+            encoder.encode(
+              `event: error\ndata: ${JSON.stringify({
+                error: "Code size exceeds the maximum allowed limit of 100KB",
+                size: `${(codeSize / 1024).toFixed(2)}KB`,
+              })}\n\n`
+            )
+          );
+          writer.close().catch(console.error);
+          return;
+        }
+
         writer.write(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
       }
     },
     (error) => {
       console.error("Error in real-time subscription:", error);
+      writer.write(
+        encoder.encode(
+          `event: error\ndata: ${JSON.stringify({
+            error: "Failed to subscribe to updates",
+          })}\n\n`
+        )
+      );
       writer.close().catch(console.error);
     }
   );

@@ -20,7 +20,7 @@ const Header = () => {
       <div className={styles.container}>
         <span className={styles.title}>
           <FaJsSquare size={35} color="yellow" />
-          <span className={styles.titleText}>Code</span>
+          <span className={styles.titleText}>kode</span>
         </span>
 
         <div onClick={runCode} className={styles.runButton} title="Run Code">
