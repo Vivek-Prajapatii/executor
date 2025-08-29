@@ -39,16 +39,24 @@ export default function CompilerPage({
   }, [id, setCode, setUuid]);
 
   return (
-    <section className={styles.editorWrapper}>
-      <div ref={editorRef} style={{ flex: `${editorWidth} 1 0%` }}>
+    <section className={`${styles.editorWrapper} ${styles.mobileLayout}`}>
+      <div
+        className={styles.editorContainer}
+        ref={editorRef}
+        style={{ flex: `${editorWidth} 1 0%` }}
+      >
         <Editor />
       </div>
 
-      <Resizer orientation="horizontal" onMouseDown={startHorizontalDrag} />
+      <Resizer
+        orientation="horizontal"
+        onMouseDown={startHorizontalDrag}
+        // className={styles.resizer}
+      />
 
       <div
         ref={inputOutputRef}
-        className={styles.inputOutput}
+        className={`${styles.inputOutput} ${styles.outputContainer}`}
         style={{ flex: `${100 - editorWidth} 1 0%` }}
       >
         <ToggleOutput />
