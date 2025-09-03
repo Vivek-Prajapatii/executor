@@ -31,7 +31,7 @@ export default function CompilerPage({
       if (data?.code) {
         setCode(data.code);
       } else {
-        setCode("//Type your things here..."); // or handle no code case
+        setCode(""); // or handle no code case
       }
     });
 
